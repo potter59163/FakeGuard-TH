@@ -11,9 +11,9 @@ const METRIC_LABELS: Record<string, string> = {
 };
 
 const BAR_COLORS: Record<string, string> = {
-  wangchanberta: "bg-indigo-500",
-  svm: "bg-sky-500",
-  random_forest: "bg-teal-500",
+  wangchanberta: "bg-violet-400",
+  svm: "bg-green-500",
+  random_forest: "bg-amber-400",
 };
 
 export default function DashboardPage() {
@@ -28,33 +28,35 @@ export default function DashboardPage() {
 
   if (error)
     return (
-      <div className="rounded-xl border border-amber-300 bg-amber-50 p-4 text-amber-800">
-        เชื่อมต่อ API ไม่ได้ ({error}) — ตรวจสอบว่า backend รันอยู่ที่ port 8000
+      <div className="rounded-2xl border-2 border-amber-200 bg-amber-50 p-4 text-amber-800">
+        🙈 เชื่อมต่อ API ไม่ได้ ({error}) — รอเซิร์ฟเวอร์ตื่นแป๊บนึงแล้วรีเฟรชนะ
       </div>
     );
-  if (!data) return <p className="text-slate-500">กำลังโหลดผลการทดลอง…</p>;
+  if (!data)
+    return <p className="text-center text-stone-400">กำลังโหลดผลการทดลอง… 🐢</p>;
 
-  const entries = Object.entries(data.models).sort(
-    (a, b) => b[1].f1 - a[1].f1
-  );
+  const entries = Object.entries(data.models).sort((a, b) => b[1].f1 - a[1].f1);
 
   return (
     <div className="space-y-8">
-      <section>
-        <h1 className="text-3xl font-bold">ผลเปรียบเทียบโมเดล</h1>
-        <p className="mt-2 text-slate-500">
+      <section className="text-center">
+        <div className="text-5xl">📊🌾</div>
+        <h1 className="mt-3 text-3xl font-semibold text-green-900">
+          ผลเปรียบเทียบโมเดล
+        </h1>
+        <p className="mx-auto mt-2 max-w-xl text-stone-500">
           ประเมินบน test set เดียวกัน 200 ข้อความ (ข่าวจริง 100 : ข่าวปลอม 100)
           — ทุกโมเดลใช้ข้อมูลและการแบ่งชุดเดียวกันเพื่อความยุติธรรม
         </p>
       </section>
 
-      <section className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <section className="overflow-x-auto rounded-3xl border-2 border-green-100 bg-white shadow-sm">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50 text-left">
-              <th className="px-4 py-3">โมเดล</th>
+            <tr className="border-b-2 border-green-100 bg-[#FDFBF6] text-left">
+              <th className="px-4 py-3 text-green-900">โมเดล</th>
               {Object.values(METRIC_LABELS).map((l) => (
-                <th key={l} className="px-4 py-3 text-center">
+                <th key={l} className="px-4 py-3 text-center text-green-900">
                   {l}
                 </th>
               ))}
@@ -62,12 +64,12 @@ export default function DashboardPage() {
           </thead>
           <tbody>
             {entries.map(([name, m]) => (
-              <tr key={name} className="border-b border-slate-100 last:border-0">
+              <tr key={name} className="border-b border-green-50 last:border-0">
                 <td className="px-4 py-3 font-medium">
                   {m.display_name}
                   {name === data.best_model && (
-                    <span className="ml-2 rounded-full bg-indigo-100 px-2 py-0.5 text-xs text-indigo-700">
-                      ดีที่สุด
+                    <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700">
+                      🏆 ดีที่สุด
                     </span>
                   )}
                 </td>
@@ -84,20 +86,22 @@ export default function DashboardPage() {
         </table>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold">F1-score (ยิ่งสูงยิ่งดี)</h2>
+      <section className="rounded-3xl border-2 border-green-100 bg-white p-6 shadow-sm">
+        <h2 className="mb-4 text-lg font-semibold text-green-900">
+          🌱 F1-score (ยิ่งสูงยิ่งดี)
+        </h2>
         <div className="space-y-3">
           {entries.map(([name, m]) => (
             <div key={name}>
               <div className="mb-1 flex justify-between text-sm">
                 <span>{m.display_name}</span>
-                <span className="tabular-nums font-medium">
+                <span className="font-medium tabular-nums">
                   {m.f1.toFixed(4)}
                 </span>
               </div>
-              <div className="h-4 w-full overflow-hidden rounded-full bg-slate-100">
+              <div className="h-4 w-full overflow-hidden rounded-full bg-[#F3EFE3]">
                 <div
-                  className={`h-full rounded-full ${BAR_COLORS[name] ?? "bg-slate-400"}`}
+                  className={`h-full rounded-full ${BAR_COLORS[name] ?? "bg-stone-400"}`}
                   style={{ width: `${m.f1 * 100}%` }}
                 />
               </div>
@@ -112,26 +116,32 @@ export default function DashboardPage() {
           return (
             <div
               key={name}
-              className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
+              className="rounded-3xl border-2 border-green-100 bg-white p-4 shadow-sm"
             >
-              <h3 className="mb-3 text-sm font-semibold">{m.display_name}</h3>
-              <div className="grid grid-cols-2 gap-1 text-center text-xs">
-                <div className="rounded-lg bg-emerald-50 p-2">
-                  <div className="text-lg font-bold text-emerald-700">
+              <h3 className="mb-3 text-sm font-semibold text-green-900">
+                {m.display_name}
+              </h3>
+              <div className="grid grid-cols-2 gap-1.5 text-center text-xs">
+                <div className="rounded-xl bg-green-50 p-2">
+                  <div className="text-lg font-semibold text-green-700">
                     {cm[0][0]}
                   </div>
                   จริง→จริง ✓
                 </div>
-                <div className="rounded-lg bg-red-50 p-2">
-                  <div className="text-lg font-bold text-red-700">{cm[0][1]}</div>
+                <div className="rounded-xl bg-red-50 p-2">
+                  <div className="text-lg font-semibold text-red-600">
+                    {cm[0][1]}
+                  </div>
                   จริง→ปลอม ✗
                 </div>
-                <div className="rounded-lg bg-red-50 p-2">
-                  <div className="text-lg font-bold text-red-700">{cm[1][0]}</div>
+                <div className="rounded-xl bg-red-50 p-2">
+                  <div className="text-lg font-semibold text-red-600">
+                    {cm[1][0]}
+                  </div>
                   ปลอม→จริง ✗
                 </div>
-                <div className="rounded-lg bg-emerald-50 p-2">
-                  <div className="text-lg font-bold text-emerald-700">
+                <div className="rounded-xl bg-green-50 p-2">
+                  <div className="text-lg font-semibold text-green-700">
                     {cm[1][1]}
                   </div>
                   ปลอม→ปลอม ✓

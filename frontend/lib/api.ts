@@ -1,4 +1,5 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000";
+export const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8000";
 
 export type PredictResponse = {
   label: "fake" | "real";
@@ -17,7 +18,20 @@ export type ModelMetrics = {
   recall: number;
   accuracy: number;
   confusion_matrix: number[][];
+  available?: boolean;
 };
+
+export async function pingHealth(timeoutMs = 4000): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/api/health`, {
+      signal: AbortSignal.timeout(timeoutMs),
+      cache: "no-store",
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
 
 export type ModelsResponse = {
   best_model: string;

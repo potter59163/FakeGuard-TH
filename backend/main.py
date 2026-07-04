@@ -3,6 +3,7 @@
 รัน:  .venv/bin/uvicorn main:app --app-dir backend --port 8000
 """
 
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
@@ -12,6 +13,9 @@ from pydantic import BaseModel, Field
 from inference import ModelRegistry
 
 registry = ModelRegistry()
+
+# origin ของ frontend (ตั้งผ่าน env บน Render; default สำหรับ dev บนเครื่อง)
+FRONTEND_ORIGIN = os.environ.get("FRONTEND_ORIGIN", "http://localhost:3000")
 
 
 @asynccontextmanager
@@ -28,7 +32,8 @@ app = FastAPI(
 )
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"] if FRONTEND_ORIGIN == "*" else [FRONTEND_ORIGIN,
+                                                        "http://localhost:3000"],
     allow_methods=["*"],
     allow_headers=["*"],
 )

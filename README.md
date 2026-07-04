@@ -42,6 +42,34 @@ cd ../..
 cd frontend && npm run dev                                  # terminal 2 → เปิด http://localhost:3000
 ```
 
+## Deploy
+
+### Backend → Render (free tier)
+
+มีไฟล์ `render.yaml` (Blueprint) เตรียมไว้แล้ว:
+
+1. เข้า [dashboard.render.com](https://dashboard.render.com) → **New → Blueprint**
+2. เชื่อม GitHub แล้วเลือก repo `FakeGuard-TH` → **Apply**
+3. Render จะสร้าง service `fakeguard-th-api` อัตโนมัติ (ติดตั้งจาก
+   `backend/requirements-render.txt` — เวอร์ชัน slim ไม่มี torch)
+4. เสร็จแล้วจะได้ URL เช่น `https://fakeguard-th-api.onrender.com`
+   ทดสอบด้วย `curl https://<url>/api/health`
+
+ข้อจำกัด free tier: RAM 512MB → ให้บริการเฉพาะ **SVM + Random Forest**
+(WangchanBERTa 403MB + torch ใหญ่เกิน ใช้ demo บนเครื่องแทน — API จะรายงาน
+`available: false` และ frontend จะ disable ตัวเลือกนี้เอง) และเซิร์ฟเวอร์จะ
+**หลับหลังไม่มีคนใช้ ~15 นาที** ตื่นใช้เวลา ~1 นาที ซึ่ง frontend มี popup
+ปลุกเซิร์ฟเวอร์รอไว้แล้ว (`components/BackendWaker.tsx`)
+
+### Frontend → Vercel
+
+1. เข้า [vercel.com](https://vercel.com) → **Add New → Project** → เลือก repo นี้
+2. ตั้ง **Root Directory = `frontend`**
+3. เพิ่ม Environment Variable: `NEXT_PUBLIC_API_BASE` = URL ของ Render
+   (เช่น `https://fakeguard-th-api.onrender.com`)
+4. Deploy — เสร็จแล้วอย่าลืมกลับไปตั้ง env `FRONTEND_ORIGIN` บน Render
+   เป็น URL ของ Vercel (เช่น `https://fakeguard-th.vercel.app`) เพื่อจำกัด CORS
+
 ## ผลการทดลอง
 
 ดู `ml/reports/results.md` (สร้างโดย `evaluate.py`) และ `ml/reports/error_analysis.md`

@@ -20,10 +20,24 @@ from preprocess import clean_text  # noqa: E402
 MODELS_DIR = ROOT / "models"
 
 
+def _artifact_exists(name: str) -> bool:
+    if name == "wangchanberta":
+        return (MODELS_DIR / "wangchanberta").is_dir()
+    return (MODELS_DIR / f"{name}.joblib").exists()
+
+
 class ModelRegistry:
     def __init__(self) -> None:
         self.metrics = json.loads((MODELS_DIR / "metrics.json").read_text())
-        self.best = self.metrics["best_model"]
+        # โมเดลที่มีไฟล์จริงบนเครื่องนี้ (บน Render ไม่มี wangchanberta — 403MB
+        # เกิน free tier จึงให้บริการเฉพาะ SVM/RF)
+        self.available = {n for n in self.metrics["models"] if _artifact_exists(n)}
+        for name, m in self.metrics["models"].items():
+            m["available"] = name in self.available
+        best = self.metrics["best_model"]
+        self.best = (best if best in self.available
+                     else max(self.available,
+                              key=lambda n: self.metrics["models"][n]["f1"]))
         self._baselines: dict = {}
         self._berta = None  # (tokenizer, model, device)
 
@@ -54,8 +68,8 @@ class ModelRegistry:
         return self._berta
 
     def warmup(self) -> None:
-        """โหลดทุกโมเดลล่วงหน้าตอน server start จะได้ตอบเร็วตั้งแต่ request แรก"""
-        for name in self.metrics["models"]:
+        """โหลดโมเดลที่มีอยู่ล่วงหน้าตอน server start จะได้ตอบเร็วตั้งแต่ request แรก"""
+        for name in self.available:
             if name == "wangchanberta":
                 self._load_berta()
             else:
@@ -66,6 +80,11 @@ class ModelRegistry:
         name = model_name or self.best
         if name not in self.metrics["models"]:
             raise KeyError(f"ไม่รู้จักโมเดล: {name}")
+        if name not in self.available:
+            raise KeyError(
+                f"โมเดล {name} ไม่พร้อมใช้งานบนเซิร์ฟเวอร์นี้ "
+                "(WangchanBERTa ขนาดใหญ่เกิน free tier ใช้ได้เฉพาะเครื่อง dev)"
+            )
         t0 = time.time()
 
         if name == "wangchanberta":

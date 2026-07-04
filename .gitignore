@@ -4,11 +4,10 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 
-# Data & models (ใหญ่เกินจะ commit)
+# Data & models ขนาดใหญ่ (โมเดลเล็ก .joblib commit ได้ ใช้ deploy บน Render)
 ml/data/raw/
 ml/data/interim/
-models/wangchanberta*/
-models/*.joblib
+models/wangchanberta/
 
 # Node / Next.js
 frontend/node_modules/

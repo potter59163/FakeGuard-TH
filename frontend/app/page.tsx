@@ -1,32 +1,60 @@
 "use client";
 
-import { useState } from "react";
-import { predict, type PredictResponse } from "@/lib/api";
+import { useEffect, useState } from "react";
+import { getModels, predict, type PredictResponse } from "@/lib/api";
 
-const MODEL_OPTIONS = [
+type ModelOption = { value: string; label: string; disabled?: boolean };
+
+const DEFAULT_OPTIONS: ModelOption[] = [
   { value: "", label: "โมเดลที่ดีที่สุด (อัตโนมัติ)" },
-  { value: "wangchanberta", label: "WangchanBERTa (fine-tuned)" },
-  { value: "svm", label: "SVM + TF-IDF" },
-  { value: "random_forest", label: "Random Forest + TF-IDF" },
 ];
 
 const EXAMPLES = [
-  "ธนาคารออมสินปล่อยสินเชื่อผ่านเพจเฟซบุ๊ก กู้ได้ทุกอาชีพ ไม่ต้องมีหลักทรัพย์",
-  "กรมอุตุนิยมวิทยาประกาศเตือนพายุฤดูร้อนบริเวณภาคเหนือช่วงสุดสัปดาห์นี้",
-  "ดื่มน้ำมะนาวผสมเบกกิ้งโซดาทุกเช้า ช่วยฆ่าเซลล์มะเร็งได้ภายใน 30 วัน",
+  {
+    emoji: "🏦",
+    text: "ธนาคารออมสินปล่อยสินเชื่อผ่านเพจเฟซบุ๊ก กู้ได้ทุกอาชีพ ไม่ต้องมีหลักทรัพย์",
+  },
+  {
+    emoji: "🌧️",
+    text: "กรมอุตุนิยมวิทยาประกาศเตือนพายุฤดูร้อนบริเวณภาคเหนือช่วงสุดสัปดาห์นี้",
+  },
+  {
+    emoji: "🍋",
+    text: "ดื่มน้ำมะนาวผสมเบกกิ้งโซดาทุกเช้า ช่วยฆ่าเซลล์มะเร็งได้ภายใน 30 วัน",
+  },
 ];
 
 export default function CheckNewsPage() {
   const [text, setText] = useState("");
   const [model, setModel] = useState("");
+  const [options, setOptions] = useState<ModelOption[]>(DEFAULT_OPTIONS);
   const [result, setResult] = useState<PredictResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    getModels()
+      .then((data) => {
+        const opts: ModelOption[] = [...DEFAULT_OPTIONS];
+        for (const [name, m] of Object.entries(data.models)) {
+          opts.push({
+            value: name,
+            label:
+              m.available === false
+                ? `${m.display_name} (เฉพาะเครื่อง dev)`
+                : m.display_name,
+            disabled: m.available === false,
+          });
+        }
+        setOptions(opts);
+      })
+      .catch(() => {}); // backend ยังหลับ — BackendWaker จัดการอยู่
+  }, []);
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (text.trim().length < 10) {
-      setError("กรุณากรอกข้อความอย่างน้อย 10 ตัวอักษร");
+      setError("กรอกข้อความอย่างน้อย 10 ตัวอักษรก่อนนะ");
       return;
     }
     setLoading(true);
@@ -51,35 +79,38 @@ export default function CheckNewsPage() {
   return (
     <div className="space-y-6">
       <section className="text-center">
-        <h1 className="text-3xl font-bold">ตรวจสอบความน่าเชื่อถือของข่าว</h1>
-        <p className="mt-2 text-slate-500">
-          วางข้อความข่าวภาษาไทยที่สงสัย ระบบจะวิเคราะห์ด้วย Machine Learning
-          ที่เรียนรู้จากข้อมูลของศูนย์ต่อต้านข่าวปลอม 1,000 ข้อความ
+        <div className="text-5xl">📰✨</div>
+        <h1 className="mt-3 text-3xl font-semibold text-green-900">
+          ข่าวนี้… จริงหรือมั่วนะ?
+        </h1>
+        <p className="mx-auto mt-2 max-w-xl text-stone-500">
+          วางข้อความข่าวที่สงสัย แล้วให้ AI ที่เรียนรู้จากข้อมูลศูนย์ต่อต้านข่าวปลอม
+          1,000 ข้อความ ช่วยคัดกรองให้ก่อนแชร์ต่อ
         </p>
       </section>
 
       <form
         onSubmit={onSubmit}
-        className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+        className="space-y-4 rounded-3xl border-2 border-green-100 bg-white p-6 shadow-sm"
       >
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           rows={4}
           maxLength={2000}
-          placeholder="วางข้อความข่าวที่ต้องการตรวจสอบที่นี่…"
-          className="w-full resize-y rounded-xl border border-slate-300 p-4 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+          placeholder="วางข้อความข่าวที่ต้องการตรวจสอบที่นี่… 🧐"
+          className="w-full resize-y rounded-2xl border-2 border-green-100 bg-[#FDFBF6] p-4 placeholder:text-stone-300 focus:border-green-400 focus:outline-none"
         />
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <label className="flex items-center gap-2 text-sm text-slate-600">
+          <label className="flex items-center gap-2 text-sm text-stone-600">
             โมเดล:
             <select
               value={model}
               onChange={(e) => setModel(e.target.value)}
-              className="rounded-lg border border-slate-300 px-2 py-1.5"
+              className="rounded-full border-2 border-green-100 bg-white px-3 py-1.5"
             >
-              {MODEL_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
+              {options.map((o) => (
+                <option key={o.value} value={o.value} disabled={o.disabled}>
                   {o.label}
                 </option>
               ))}
@@ -88,75 +119,75 @@ export default function CheckNewsPage() {
           <button
             type="submit"
             disabled={loading}
-            className="rounded-xl bg-indigo-600 px-6 py-2.5 font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
+            className="rounded-full bg-green-600 px-8 py-2.5 font-semibold text-white shadow-sm transition hover:bg-green-700 hover:shadow disabled:opacity-50"
           >
-            {loading ? "กำลังวิเคราะห์…" : "ตรวจสอบ"}
+            {loading ? "กำลังวิเคราะห์… 🔎" : "ตรวจสอบเลย!"}
           </button>
         </div>
-        <div className="flex flex-wrap gap-2 text-xs">
-          <span className="text-slate-400">ลองตัวอย่าง:</span>
+        <div className="flex flex-wrap items-center gap-2 text-xs">
+          <span className="text-stone-400">ลองตัวอย่าง:</span>
           {EXAMPLES.map((ex) => (
             <button
-              key={ex}
+              key={ex.text}
               type="button"
-              onClick={() => setText(ex)}
-              className="rounded-full border border-slate-200 px-3 py-1 text-slate-500 hover:border-indigo-300 hover:text-indigo-600"
+              onClick={() => setText(ex.text)}
+              className="rounded-full border-2 border-green-100 bg-[#FDFBF6] px-3 py-1.5 text-stone-500 transition hover:border-green-300 hover:text-green-700"
             >
-              {ex.slice(0, 32)}…
+              {ex.emoji} {ex.text.slice(0, 28)}…
             </button>
           ))}
         </div>
       </form>
 
       {error && (
-        <div className="rounded-xl border border-amber-300 bg-amber-50 p-4 text-amber-800">
-          {error}
+        <div className="rounded-2xl border-2 border-amber-200 bg-amber-50 p-4 text-amber-800">
+          🙈 {error}
         </div>
       )}
 
       {result && (
         <section
-          className={`rounded-2xl border-2 p-6 ${
+          className={`rounded-3xl border-2 p-6 ${
             isFake
-              ? "border-red-300 bg-red-50"
-              : "border-emerald-300 bg-emerald-50"
+              ? "border-red-200 bg-red-50"
+              : "border-green-200 bg-green-50"
           }`}
         >
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <div
-                className={`text-3xl font-bold ${
-                  isFake ? "text-red-600" : "text-emerald-600"
+                className={`text-3xl font-semibold ${
+                  isFake ? "text-red-600" : "text-green-700"
                 }`}
               >
-                {isFake ? "⚠️ น่าจะเป็นข่าวปลอม" : "✓ น่าจะเป็นข่าวจริง"}
+                {isFake ? "🚨 น่าจะเป็นข่าวปลอม" : "💚 น่าจะเป็นข่าวจริง"}
               </div>
-              <div className="mt-1 text-sm text-slate-500">
+              <div className="mt-1 text-sm text-stone-500">
                 วิเคราะห์โดย {result.display_name} · ใช้เวลา{" "}
                 {result.latency_ms.toLocaleString()} ms
               </div>
             </div>
             <div className="text-center">
               <div
-                className={`text-4xl font-bold ${
-                  isFake ? "text-red-600" : "text-emerald-600"
+                className={`text-4xl font-semibold ${
+                  isFake ? "text-red-600" : "text-green-700"
                 }`}
               >
                 {pct}%
               </div>
-              <div className="text-xs text-slate-500">ความมั่นใจ</div>
+              <div className="text-xs text-stone-500">ความมั่นใจ</div>
             </div>
           </div>
           <div className="mt-4 h-3 w-full overflow-hidden rounded-full bg-white">
             <div
               className={`h-full rounded-full transition-all duration-700 ${
-                isFake ? "bg-red-500" : "bg-emerald-500"
+                isFake ? "bg-red-400" : "bg-green-500"
               }`}
               style={{ width: `${pct}%` }}
             />
           </div>
-          <p className="mt-4 text-xs text-slate-500">
-            ผลนี้เป็นการคัดกรองเบื้องต้นจากรูปแบบภาษาเท่านั้น
+          <p className="mt-4 text-xs text-stone-500">
+            🌿 ผลนี้เป็นการคัดกรองเบื้องต้นจากรูปแบบภาษาเท่านั้น
             โปรดตรวจสอบข้อเท็จจริงกับแหล่งข่าวทางการ เช่น ศูนย์ต่อต้านข่าวปลอม
             (antifakenewscenter.com) ก่อนแชร์ต่อ
           </p>

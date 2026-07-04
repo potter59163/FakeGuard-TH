@@ -1,0 +1,15 @@
+# Render Blueprint — deploy backend FakeGuard-TH (free tier)
+# วิธีใช้: Render Dashboard → New → Blueprint → เลือก repo นี้ → Apply
+services:
+  - type: web
+    name: fakeguard-th-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r backend/requirements-render.txt
+    startCommand: uvicorn main:app --app-dir backend --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.14.5
+      - key: FRONTEND_ORIGIN
+        value: "*"

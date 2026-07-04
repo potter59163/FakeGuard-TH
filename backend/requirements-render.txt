@@ -1,0 +1,8 @@
+# Slim dependencies สำหรับ deploy บน Render free tier (RAM 512MB)
+# ไม่มี torch/transformers — ให้บริการเฉพาะ SVM + Random Forest
+# (WangchanBERTa 403MB + torch ~2GB เกิน free tier ใช้ demo บนเครื่อง dev แทน)
+fastapi==0.139.0
+uvicorn==0.50.0
+joblib==1.5.3
+scikit-learn==1.9.0
+pythainlp==5.3.4
