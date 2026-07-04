@@ -1,0 +1,10 @@
+pandas
+requests
+beautifulsoup4
+pythainlp
+scikit-learn
+torch
+transformers
+datasets
+matplotlib
+joblib

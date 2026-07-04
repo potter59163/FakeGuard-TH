@@ -1,0 +1,20 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Data & models (ใหญ่เกินจะ commit)
+ml/data/raw/
+ml/data/interim/
+models/wangchanberta*/
+models/*.joblib
+
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# OS / editor
+.DS_Store
+*.log
