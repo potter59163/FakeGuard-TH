@@ -1,0 +1,14 @@
+# Vercel deploy นี้เป็น monorepo (repo-linked) — frontend/ คือส่วนเดียวที่ build
+# ไฟล์/โฟลเดอร์ด้านล่างไม่เกี่ยวกับเว็บเลย ไม่ต้องอัปโหลดตอน deploy
+.venv/
+ml/
+models/
+backend/
+deploy/
+scripts/
+frontend/node_modules/
+frontend/.next/
+*.pdf
+.claude/
+.hf_token
+.git/

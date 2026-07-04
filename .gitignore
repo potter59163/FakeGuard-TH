@@ -22,3 +22,5 @@ frontend/out/
 *.pdf
 .claude/
 .hf_token
+.vercel
+.env*

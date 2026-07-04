@@ -104,12 +104,22 @@ cd frontend && npm run dev                                  # terminal 2 → เ
 
 ### Frontend → Vercel
 
+**สถานะปัจจุบัน:** deploy แล้วที่ **https://fake-guard-th.vercel.app**
+(ตั้ง Root Directory = `frontend`, env `NEXT_PUBLIC_API_BASE` ชี้ไป HF Space,
+และ `FRONTEND_ORIGIN` บน Space ถูกจำกัดให้เฉพาะ URL นี้แล้ว — CORS ทดสอบผ่าน)
+
+หมายเหตุ: repo นี้เป็น monorepo ตัว Vercel CLI จะ scan จาก root repo
+ถ้า deploy ใหม่ด้วยตัวเองอย่าลืมว่ามี `.vercelignore` ที่ root
+กันไม่ให้อัปโหลด `ml/`, `models/`, `.venv/` (ไฟล์ใหญ่ ไม่เกี่ยวกับเว็บ) ไปด้วย
+
+ขั้นตอนถ้าต้องตั้งใหม่ตั้งแต่ต้น:
+
 1. เข้า [vercel.com](https://vercel.com) → **Add New → Project** → เลือก repo นี้
 2. ตั้ง **Root Directory = `frontend`**
 3. เพิ่ม Environment Variable: `NEXT_PUBLIC_API_BASE` =
    `https://pottersk-fakeguard-th-api.hf.space`
 4. Deploy — เสร็จแล้วอย่าลืมกลับไปตั้ง `FRONTEND_ORIGIN` บน backend
-   เป็น URL ของ Vercel (เช่น `https://fakeguard-th.vercel.app`) เพื่อจำกัด CORS
+   เป็น URL ของ Vercel เพื่อจำกัด CORS
 
 ## ผลการทดลอง
 
