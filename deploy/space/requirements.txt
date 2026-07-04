@@ -1,0 +1,10 @@
+fastapi==0.139.0
+uvicorn[standard]==0.50.0
+joblib==1.5.3
+scikit-learn==1.9.0
+pythainlp==5.3.4
+torch==2.12.1
+transformers==5.13.0
+sentencepiece==0.2.1
+protobuf==7.35.1
+huggingface_hub==1.22.0

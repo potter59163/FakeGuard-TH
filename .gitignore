@@ -17,3 +17,8 @@ frontend/out/
 # OS / editor
 .DS_Store
 *.log
+
+# เอกสารส่วนตัว / secrets ไม่ขึ้น git
+*.pdf
+.claude/
+.hf_token
