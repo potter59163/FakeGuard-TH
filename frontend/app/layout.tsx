@@ -51,7 +51,7 @@ export default function RootLayout({
           {children}
         </main>
         <footer className="mx-auto w-full max-w-4xl px-4 pb-8 text-center text-xs text-slate-400">
-          โครงงาน JSTP รุ่นที่ 29 · ผลการวิเคราะห์เป็นเพียงการคัดกรองเบื้องต้น
+          ผลการวิเคราะห์เป็นเพียงการคัดกรองเบื้องต้น
           ไม่ใช่คำตัดสินสุดท้าย โปรดตรวจสอบกับแหล่งข่าวทางการเสมอ
         </footer>
       </body>
