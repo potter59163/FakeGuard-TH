@@ -1,16 +1,28 @@
+import {
+  AlertTriangleIcon,
+  BookIcon,
+  CpuIcon,
+  InfoIcon,
+  SearchIcon,
+  UserIcon,
+} from "@/components/icons";
+
 export default function AboutPage() {
   return (
     <div className="space-y-6">
-      <section className="text-center">
-        <div className="text-5xl">🌱🛡️</div>
-        <h1 className="mt-3 text-3xl font-semibold text-green-900">
+      <section className="flex flex-col items-center text-center">
+        <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-red-100 text-red-600">
+          <InfoIcon className="h-9 w-9" />
+        </span>
+        <h1 className="mt-4 text-3xl font-semibold text-red-800">
           เกี่ยวกับโครงงาน
         </h1>
       </section>
 
-      <section className="rounded-3xl border-2 border-green-100 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-green-900">
-          🔍 FakeGuard-TH คืออะไร
+      <section className="rounded-3xl border-2 border-red-100 bg-white p-6 shadow-sm">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-red-800">
+          <SearchIcon className="h-5 w-5" />
+          FakeGuard-TH คืออะไร
         </h2>
         <p className="mt-2 leading-relaxed text-stone-600">
           ต้นแบบระบบตรวจสอบความน่าเชื่อถือของข้อมูลภาษาไทยอัตโนมัติ
@@ -20,21 +32,28 @@ export default function AboutPage() {
           เสนอต่อโครงการพัฒนาอัจฉริยภาพทางวิทยาศาสตร์และเทคโนโลยีสำหรับเด็กและเยาวชน
           (JSTP) รุ่นที่ 29
         </p>
-        <ul className="mt-4 space-y-1 text-sm text-stone-600">
-          <li>
-            <span className="font-medium">👦 ผู้พัฒนา:</span> นายปริพัฒน์ รอดหยู่
-            โรงเรียนสวนกุหลาบวิทยาลัย
+        <ul className="mt-4 space-y-2 text-sm text-stone-600">
+          <li className="flex items-center gap-2">
+            <UserIcon className="h-4 w-4 shrink-0 text-red-500" />
+            <span>
+              <span className="font-medium">ผู้พัฒนา:</span> นายปริพัฒน์ รอดหยู่
+              โรงเรียนสวนกุหลาบวิทยาลัย
+            </span>
           </li>
-          <li>
-            <span className="font-medium">👩‍🏫 อาจารย์ที่ปรึกษา:</span> ครูนิภารัตน์
-            รูปไข่ กลุ่มสาระการเรียนรู้วิทยาศาสตร์และเทคโนโลยี
+          <li className="flex items-center gap-2">
+            <UserIcon className="h-4 w-4 shrink-0 text-red-500" />
+            <span>
+              <span className="font-medium">อาจารย์ที่ปรึกษา:</span> ครูนิภารัตน์
+              รูปไข่ กลุ่มสาระการเรียนรู้วิทยาศาสตร์และเทคโนโลยี
+            </span>
           </li>
         </ul>
       </section>
 
-      <section className="rounded-3xl border-2 border-green-100 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-green-900">
-          📚 ข้อมูลที่ใช้ฝึกสอน
+      <section className="rounded-3xl border-2 border-red-100 bg-white p-6 shadow-sm">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-red-800">
+          <BookIcon className="h-5 w-5" />
+          ข้อมูลที่ใช้ฝึกสอน
         </h2>
         <p className="mt-2 leading-relaxed text-stone-600">
           ข้อความข่าว 1,000 ข้อความ (ข่าวจริง 500 : ข่าวปลอม 500)
@@ -45,9 +64,10 @@ export default function AboutPage() {
         </p>
       </section>
 
-      <section className="rounded-3xl border-2 border-green-100 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-green-900">
-          🤖 การใช้ปัญญาประดิษฐ์ (AI) ในโครงงาน
+      <section className="rounded-3xl border-2 border-red-100 bg-white p-6 shadow-sm">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-red-800">
+          <CpuIcon className="h-5 w-5" />
+          การใช้ปัญญาประดิษฐ์ (AI) ในโครงงาน
         </h2>
         <p className="mt-2 leading-relaxed text-stone-600">
           โครงงานนี้ใช้ AI (Claude) ช่วยในการ (1)
@@ -59,8 +79,9 @@ export default function AboutPage() {
       </section>
 
       <section className="rounded-3xl border-2 border-amber-200 bg-amber-50 p-6">
-        <h2 className="text-lg font-semibold text-amber-800">
-          ⚠️ ข้อจำกัดสำคัญ
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-amber-800">
+          <AlertTriangleIcon className="h-5 w-5" />
+          ข้อจำกัดสำคัญ
         </h2>
         <ul className="mt-2 list-inside list-disc space-y-1 text-sm leading-relaxed text-amber-800">
           <li>

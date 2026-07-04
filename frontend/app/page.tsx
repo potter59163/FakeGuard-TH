@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { getModels, predict, type PredictResponse } from "@/lib/api";
+import {
+  AlertTriangleIcon,
+  CheckCircleIcon,
+  NewspaperIcon,
+  SearchIcon,
+} from "@/components/icons";
 
 type ModelOption = { value: string; label: string; disabled?: boolean };
 
@@ -10,18 +16,9 @@ const DEFAULT_OPTIONS: ModelOption[] = [
 ];
 
 const EXAMPLES = [
-  {
-    emoji: "🏦",
-    text: "ธนาคารออมสินปล่อยสินเชื่อผ่านเพจเฟซบุ๊ก กู้ได้ทุกอาชีพ ไม่ต้องมีหลักทรัพย์",
-  },
-  {
-    emoji: "🌧️",
-    text: "กรมอุตุนิยมวิทยาประกาศเตือนพายุฤดูร้อนบริเวณภาคเหนือช่วงสุดสัปดาห์นี้",
-  },
-  {
-    emoji: "🍋",
-    text: "ดื่มน้ำมะนาวผสมเบกกิ้งโซดาทุกเช้า ช่วยฆ่าเซลล์มะเร็งได้ภายใน 30 วัน",
-  },
+  "ธนาคารออมสินปล่อยสินเชื่อผ่านเพจเฟซบุ๊ก กู้ได้ทุกอาชีพ ไม่ต้องมีหลักทรัพย์",
+  "การรถไฟแห่งประเทศไทยเปิดจองตั๋วรถไฟล่วงหน้า 90 วันผ่านระบบออนไลน์",
+  "ดื่มน้ำมะนาวผสมเบกกิ้งโซดาทุกเช้า ช่วยฆ่าเซลล์มะเร็งได้ภายใน 30 วัน",
 ];
 
 export default function CheckNewsPage() {
@@ -78,9 +75,11 @@ export default function CheckNewsPage() {
 
   return (
     <div className="space-y-6">
-      <section className="text-center">
-        <div className="text-5xl">📰✨</div>
-        <h1 className="mt-3 text-3xl font-semibold text-green-900">
+      <section className="flex flex-col items-center text-center">
+        <span className="flex h-16 w-16 items-center justify-center rounded-3xl bg-red-100 text-red-600">
+          <NewspaperIcon className="h-9 w-9" />
+        </span>
+        <h1 className="mt-4 text-3xl font-semibold text-red-800">
           ข่าวนี้… จริงหรือมั่วนะ?
         </h1>
         <p className="mx-auto mt-2 max-w-xl text-stone-500">
@@ -91,15 +90,15 @@ export default function CheckNewsPage() {
 
       <form
         onSubmit={onSubmit}
-        className="space-y-4 rounded-3xl border-2 border-green-100 bg-white p-6 shadow-sm"
+        className="space-y-4 rounded-3xl border-2 border-red-100 bg-white p-6 shadow-sm"
       >
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           rows={4}
           maxLength={2000}
-          placeholder="วางข้อความข่าวที่ต้องการตรวจสอบที่นี่… 🧐"
-          className="w-full resize-y rounded-2xl border-2 border-green-100 bg-[#FDFBF6] p-4 placeholder:text-stone-300 focus:border-green-400 focus:outline-none"
+          placeholder="วางข้อความข่าวที่ต้องการตรวจสอบที่นี่…"
+          className="w-full resize-y rounded-2xl border-2 border-red-100 bg-[#FEFBFA] p-4 placeholder:text-stone-300 focus:border-red-400 focus:outline-none"
         />
         <div className="flex flex-wrap items-center justify-between gap-3">
           <label className="flex items-center gap-2 text-sm text-stone-600">
@@ -107,7 +106,7 @@ export default function CheckNewsPage() {
             <select
               value={model}
               onChange={(e) => setModel(e.target.value)}
-              className="rounded-full border-2 border-green-100 bg-white px-3 py-1.5"
+              className="rounded-full border-2 border-red-100 bg-white px-3 py-1.5"
             >
               {options.map((o) => (
                 <option key={o.value} value={o.value} disabled={o.disabled}>
@@ -119,29 +118,31 @@ export default function CheckNewsPage() {
           <button
             type="submit"
             disabled={loading}
-            className="rounded-full bg-green-600 px-8 py-2.5 font-semibold text-white shadow-sm transition hover:bg-green-700 hover:shadow disabled:opacity-50"
+            className="flex items-center gap-2 rounded-full bg-red-600 px-8 py-2.5 font-semibold text-white shadow-sm transition hover:bg-red-700 hover:shadow disabled:opacity-50"
           >
-            {loading ? "กำลังวิเคราะห์… 🔎" : "ตรวจสอบเลย!"}
+            <SearchIcon className="h-4.5 w-4.5" />
+            {loading ? "กำลังวิเคราะห์…" : "ตรวจสอบเลย!"}
           </button>
         </div>
         <div className="flex flex-wrap items-center gap-2 text-xs">
           <span className="text-stone-400">ลองตัวอย่าง:</span>
           {EXAMPLES.map((ex) => (
             <button
-              key={ex.text}
+              key={ex}
               type="button"
-              onClick={() => setText(ex.text)}
-              className="rounded-full border-2 border-green-100 bg-[#FDFBF6] px-3 py-1.5 text-stone-500 transition hover:border-green-300 hover:text-green-700"
+              onClick={() => setText(ex)}
+              className="rounded-full border-2 border-red-100 bg-[#FEFBFA] px-3 py-1.5 text-stone-500 transition hover:border-red-300 hover:text-red-700"
             >
-              {ex.emoji} {ex.text.slice(0, 28)}…
+              {ex.slice(0, 32)}…
             </button>
           ))}
         </div>
       </form>
 
       {error && (
-        <div className="rounded-2xl border-2 border-amber-200 bg-amber-50 p-4 text-amber-800">
-          🙈 {error}
+        <div className="flex items-center gap-2 rounded-2xl border-2 border-amber-200 bg-amber-50 p-4 text-amber-800">
+          <AlertTriangleIcon className="h-5 w-5 shrink-0" />
+          {error}
         </div>
       )}
 
@@ -150,17 +151,22 @@ export default function CheckNewsPage() {
           className={`rounded-3xl border-2 p-6 ${
             isFake
               ? "border-red-200 bg-red-50"
-              : "border-green-200 bg-green-50"
+              : "border-emerald-200 bg-emerald-50"
           }`}
         >
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <div
-                className={`text-3xl font-semibold ${
-                  isFake ? "text-red-600" : "text-green-700"
+                className={`flex items-center gap-2 text-3xl font-semibold ${
+                  isFake ? "text-red-600" : "text-emerald-700"
                 }`}
               >
-                {isFake ? "🚨 น่าจะเป็นข่าวปลอม" : "💚 น่าจะเป็นข่าวจริง"}
+                {isFake ? (
+                  <AlertTriangleIcon className="h-8 w-8" />
+                ) : (
+                  <CheckCircleIcon className="h-8 w-8" />
+                )}
+                {isFake ? "น่าจะเป็นข่าวปลอม" : "น่าจะเป็นข่าวจริง"}
               </div>
               <div className="mt-1 text-sm text-stone-500">
                 วิเคราะห์โดย {result.display_name} · ใช้เวลา{" "}
@@ -170,7 +176,7 @@ export default function CheckNewsPage() {
             <div className="text-center">
               <div
                 className={`text-4xl font-semibold ${
-                  isFake ? "text-red-600" : "text-green-700"
+                  isFake ? "text-red-600" : "text-emerald-700"
                 }`}
               >
                 {pct}%
@@ -181,13 +187,13 @@ export default function CheckNewsPage() {
           <div className="mt-4 h-3 w-full overflow-hidden rounded-full bg-white">
             <div
               className={`h-full rounded-full transition-all duration-700 ${
-                isFake ? "bg-red-400" : "bg-green-500"
+                isFake ? "bg-red-500" : "bg-emerald-500"
               }`}
               style={{ width: `${pct}%` }}
             />
           </div>
           <p className="mt-4 text-xs text-stone-500">
-            🌿 ผลนี้เป็นการคัดกรองเบื้องต้นจากรูปแบบภาษาเท่านั้น
+            ผลนี้เป็นการคัดกรองเบื้องต้นจากรูปแบบภาษาเท่านั้น
             โปรดตรวจสอบข้อเท็จจริงกับแหล่งข่าวทางการ เช่น ศูนย์ต่อต้านข่าวปลอม
             (antifakenewscenter.com) ก่อนแชร์ต่อ
           </p>
