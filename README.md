@@ -55,6 +55,12 @@ cd frontend && npm run dev                                  # terminal 2 → เ
 
 แนะนำ **Hugging Face Space** ถ้าอยากให้ WangchanBERTa ใช้งานได้บนเว็บจริงด้วย
 
+**สถานะปัจจุบัน:** deploy แล้วที่
+[huggingface.co/spaces/Pottersk/fakeguard-th-api](https://huggingface.co/spaces/Pottersk/fakeguard-th-api)
+— URL API: `https://pottersk-fakeguard-th-api.hf.space` (ทดสอบแล้ว ทั้ง 3
+โมเดล `available: true` รวม WangchanBERTa) โมเดลอยู่ที่
+[huggingface.co/Pottersk/fakeguard-th-models](https://huggingface.co/Pottersk/fakeguard-th-models)
+
 ### Backend → Hugging Face Space (แนะนำ — ครบทั้ง 3 โมเดล)
 
 โค้ด Space อยู่ใน `deploy/space/` (Docker, ดาวน์โหลดโมเดลจาก HF Model Hub ตอน start)
@@ -100,8 +106,8 @@ cd frontend && npm run dev                                  # terminal 2 → เ
 
 1. เข้า [vercel.com](https://vercel.com) → **Add New → Project** → เลือก repo นี้
 2. ตั้ง **Root Directory = `frontend`**
-3. เพิ่ม Environment Variable: `NEXT_PUBLIC_API_BASE` = URL ของ backend ที่ deploy ไว้
-   (เช่น `https://<username>-fakeguard-th-api.hf.space` หรือ Render URL)
+3. เพิ่ม Environment Variable: `NEXT_PUBLIC_API_BASE` =
+   `https://pottersk-fakeguard-th-api.hf.space`
 4. Deploy — เสร็จแล้วอย่าลืมกลับไปตั้ง `FRONTEND_ORIGIN` บน backend
    เป็น URL ของ Vercel (เช่น `https://fakeguard-th.vercel.app`) เพื่อจำกัด CORS
 
